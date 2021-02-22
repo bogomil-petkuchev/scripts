@@ -5,13 +5,20 @@ if [[ $EUID != 0 ]]; then
     exit 1
 fi
 
-function check {
+function check() {
     echo -e "\e[7mDevice:\e[0m"
     fdisk -l | grep -A 4 "Device" | awk '{print $1,$5}'
 }
 
-function create {
-    list=$()
+function create() {
+    list=$(fdisk -l | grep -A 4 "Device" | awk '{print $1}')
+    echo "Select device"
+    select device in $list; do
+        echo "You selected ${device//:/}. This will create a new primary partition"
+        sfdisk -d ${device//:/} > sda-sfdisk
+        cat sda-sfdisk
+        sudo sfdisk ${device//:/} < sda-sfdisk
+    done
 }
 
 while :; do
