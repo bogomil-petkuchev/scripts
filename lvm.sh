@@ -11,14 +11,13 @@ function check() {
 }
 
 function create() {
-    list=$(fdisk -l | grep -A 4 "Device" | awk '{print $1}')
-    echo "Select device"
-    select device in $list; do
-        echo "You selected ${device//:/}. This will create a new primary partition"
-        sfdisk -d ${device//:/} > sda-sfdisk
-        cat sda-sfdisk
-        sudo sfdisk ${device//:/} < sda-sfdisk
-    done
+    fdisk -l | grep "Disk"
+    echo "Type in the disk path:"
+    read disk
+    echo "\e[7mYou selected $disk.[0m"
+    sfdisk $disk
+    
+
 }
 
 while :; do
