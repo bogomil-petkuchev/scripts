@@ -1,19 +1,25 @@
 #!/bin/bash
 
+bold='\e[1m'
+reset='\e[0m'
+green='\e[42m'
+red='\e[41m'
 if [[ $EUID != 0 ]]; then
-    echo -e "The script must be run with root privileges. Please run:\n sudo ./lvm.sh"
+    echo -e "${bold}The script must be run with root privileges. Please run:\n sudo ./lvm.sh${reset}"
     exit 1
 fi
 
 function check() {
     echo -e "\e[7mDevice:\e[0m"
-    fdisk -l | grep "Disk"
+    disks=$(fdisk -l | grep "Disk")
+    echo -e "${green}$disks${reset}"
 }
 
 function create() {
-    fdisk -l | grep "Disk"
+    disks=$(fdisk -l | grep "Disk")
+    echo -e "${green}$disks${reset}"
     echo "Enter the disk path, eg /dev/sdb:"
-    read disk
+    read -r disk
 
     echo -e "\e[34mYou selected $disk.\e[0m"
     echo -e "\e[34mGuide for fdisk with step by step options for new partition
